@@ -11,13 +11,7 @@ def storage_information_view(request):
         enter_time = localtime(visit.entered_at)
         visit_duration = Visit.get_duration(visit)
         duration = Visit.format_duration(visit_duration)
-        minutes = visit_duration // 60
-        if minutes >= 60 and minutes <= 120:
-            strange = 'Да'
-        elif minutes > 120:
-            strange = 'Очень'
-        else:
-            strange = 'Нет'
+        strange = Visit.assess_visit_suspicion(visit)
 
         non_closed_visits.append(
             {

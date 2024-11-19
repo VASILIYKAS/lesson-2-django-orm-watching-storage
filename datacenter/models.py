@@ -53,3 +53,12 @@ class Visit(models.Model):
         duration_seconds = delta.total_seconds()
         duration_in_minutes = duration_seconds // 60
         return duration_in_minutes >= minutes
+
+    def assess_visit_suspicion(self):
+        minutes = Visit.get_duration(self) // 60
+        if minutes >= 60 and minutes <= 120:
+            return 'Да'
+        elif minutes > 120:
+            return 'Очень'
+        else:
+            return 'Нет'

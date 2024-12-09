@@ -9,16 +9,15 @@ def passcard_info_view(request, passcode):
     this_passcard_visits = []
 
     for visit in visits_for_passcard:
-        delta = visit.leaved_at - visit.entered_at
-        duration_seconds = delta.total_seconds()
-        is_strange = Visit.is_visit_long(visit, 60)
+        duration_seconds = visit.get_duration()
+        is_strange = visit.is_visit_long(60)
 
         this_passcard_visits.append(
             {
-            'entered_at': visit.entered_at,
-            'duration': Visit.format_duration(duration_seconds),
-            'is_strange': is_strange
-        }
+                'entered_at': visit.entered_at,
+                'duration': visit.format_duration(duration_seconds),
+                'is_strange': is_strange
+            }
         )
 
     context = {

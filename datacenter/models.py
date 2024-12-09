@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.timezone import localtime
 
+SECONDS_IN_HOUR = 3600
+SECONDS_IN_MINUTE = 60
 
 class Passcard(models.Model):
     is_active = models.BooleanField(default=False)
@@ -31,32 +33,33 @@ class Visit(models.Model):
         )
 
     def get_duration(self):
-        current_time = localtime()
-        enter = self.entered_at
-        enter_time = localtime(enter)
-        delta = current_time - enter_time
+        if self.leaved_at is not None:
+            exit_time = localtime(self.leaved_at)
+        else:
+            exit_time = localtime()
+
+        enter_time = localtime(self.entered_at)
+        delta = exit_time - enter_time
         duration = delta.total_seconds()
         return duration
 
-    def format_duration(self):
-        hours = self // 3600
-        minutes = (self % 3600) // 60
+    def format_duration(self, duration):
+        hours = duration // SECONDS_IN_HOUR
+        minutes = (duration % SECONDS_IN_HOUR) // SECONDS_IN_MINUTE
         format_time = f'{int(hours)}:{int(minutes):02}:00'
         return format_time
 
     def is_visit_long(self, minutes=60):
         if self.leaved_at is None:
             return 'Ещё внутри'
-        enter_time = localtime(self.entered_at)
-        leaved_time = localtime(self.leaved_at)
-        delta = leaved_time - enter_time
-        duration_seconds = delta.total_seconds()
+
+        duration_seconds = self.get_duration()
         duration_in_minutes = duration_seconds // 60
         return duration_in_minutes >= minutes
 
     def assess_visit_suspicion(self):
         minutes = Visit.get_duration(self) // 60
-        if minutes >= 60 and minutes <= 120:
+        if 60 <= minutes <= 120:
             return 'Да'
         elif minutes > 120:
             return 'Очень'

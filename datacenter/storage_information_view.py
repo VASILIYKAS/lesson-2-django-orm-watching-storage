@@ -9,9 +9,9 @@ def storage_information_view(request):
 
     for visit in visits:
         enter_time = localtime(visit.entered_at)
-        visit_duration = Visit.get_duration(visit)
-        duration = Visit.format_duration(visit_duration)
-        strange = Visit.assess_visit_suspicion(visit)
+        visit_duration = visit.get_duration()
+        duration = visit.format_duration(visit_duration)
+        strange = visit.assess_visit_suspicion()
 
         non_closed_visits.append(
             {
@@ -21,7 +21,6 @@ def storage_information_view(request):
                 'is_strange': strange
             }
         )
-
 
     context = {
         'non_closed_visits': non_closed_visits

@@ -25,7 +25,7 @@ Python3.12 должен быть уже установлен!
 нужно активировать виртуальное окружения этого проекта, сделать это можно с помощью
 команды `.venv\Scripts\activate`.\
 Вот пример запуска из моего терминала:
-[terminal.gif](images/terminal.gif)
+![terminal.gif](https://github.com/VASILIYKAS/lesson-2-django-orm-watching-storage/raw/master/images/terminal.gif)
 
 ### Цель проекта
 Код написан в образовательных целях на онлайн-курсе для веб-разработчиков [dvmn.org](https://dvmn.org/).

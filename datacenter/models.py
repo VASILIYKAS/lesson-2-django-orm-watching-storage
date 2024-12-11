@@ -3,6 +3,8 @@ from django.utils.timezone import localtime
 
 SECONDS_IN_HOUR = 3600
 SECONDS_IN_MINUTE = 60
+MINUTE_IN_HOUR = 60
+SUSPICION_THRESHOLD = 120
 
 class Passcard(models.Model):
     is_active = models.BooleanField(default=False)
@@ -54,14 +56,14 @@ class Visit(models.Model):
             return 'Ещё внутри'
 
         duration_seconds = self.get_duration()
-        duration_in_minutes = duration_seconds // 60
+        duration_in_minutes = duration_seconds // SECONDS_IN_MINUTE
         return duration_in_minutes >= minutes
 
     def assess_visit_suspicion(self):
-        minutes = self.get_duration() // 60
-        if 60 <= minutes <= 120:
+        minutes = self.get_duration() // SECONDS_IN_MINUTE
+        if MINUTE_IN_HOUR <= minutes <= SUSPICION_THRESHOLD:
             return 'Да'
-        elif minutes > 120:
+        elif minutes > SUSPICION_THRESHOLD:
             return 'Очень'
         else:
             return 'Нет'
